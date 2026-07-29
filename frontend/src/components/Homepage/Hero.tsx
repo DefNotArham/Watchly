@@ -29,7 +29,9 @@ const Hero = () => {
             }
           }}
           className="cursor-pointer rounded-full bg-blue-500 px-7 py-3 font-semibold text-white transition hover:bg-blue-400"
-        ></button>
+        >
+          Create room
+        </button>
 
         <button className="cursor-pointer rounded-full border border-slate-700 px-7 py-3 text-slate-100 transition hover:bg-slate-900">
           Join Room
