@@ -10,14 +10,21 @@ type UserType = {
 
 type UserStoreType = {
   user: UserType | null;
-  initializeUser: (clientId: string) => Promise<void>;
+  initializeUser: () => Promise<void>;
 };
 
 const useUserStore = create<UserStoreType>((set) => ({
   user: null,
 
-  initializeUser: async (clientId: string) => {
+  initializeUser: async () => {
     try {
+      let clientId = localStorage.getItem("clientId");
+
+      if (!clientId) {
+        clientId = crypto.randomUUID();
+        localStorage.setItem("clientId", clientId);
+      }
+
       const response = await api.post("/user/initialize-user", { clientId });
 
       if (response.data.success) {
