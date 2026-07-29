@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import useRoomStore from "../../stores/room.store";
+
 const RoomHeader = () => {
   const navigate = useNavigate();
+
+  const currentRoom = useRoomStore((state) => state.currentRoom);
 
   return (
     <header className="border-b border-slate-800">
@@ -26,7 +30,9 @@ const RoomHeader = () => {
 
           <p className="text-sm text-slate-400">
             Room Code:{" "}
-            <span className="font-semibold text-blue-500">A7X9K</span>
+            <span className="font-semibold text-blue-500">
+              {currentRoom?.joinCode}
+            </span>
           </p>
         </div>
 

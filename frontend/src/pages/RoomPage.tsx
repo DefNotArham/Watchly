@@ -4,7 +4,29 @@ import ChatPanel from "../components/Roompage/ChatPanel";
 
 import Fonts from "../styles/Fonts";
 
+import useRoomStore from "../stores/room.store";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+
 const RoomPage = () => {
+  const loadRoom = useRoomStore((state) => state.loadRoom);
+
+  const { roomId } = useParams();
+
+  useEffect(() => {
+    const initRoom = async () => {
+      if (!roomId) return;
+
+      const room = await loadRoom(roomId);
+
+      if (room) {
+        console.log("Room loaded:", room);
+      }
+    };
+
+    initRoom();
+  }, [roomId, loadRoom]);
+
   return (
     <>
       <Fonts />
