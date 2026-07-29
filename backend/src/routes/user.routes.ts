@@ -4,6 +4,6 @@ import getOrCreateUserController from "../controllers/userControllers/getOrCreat
 
 const router = express.Router();
 
-router.post("/create-user", getOrCreateUserController);
+router.post("/initialize-user", getOrCreateUserController);
 
 export default router;
