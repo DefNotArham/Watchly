@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import useRoomStore from "../../stores/room.store";
 
+import { SyncLoader } from "react-spinners";
+
 const Hero = () => {
   const { createRoom, createRoomLoading, currentRoom } = useRoomStore();
   const navigate = useNavigate();
@@ -28,9 +30,13 @@ const Hero = () => {
               navigate(`/room/:${currentRoom._id}`);
             }
           }}
-          className="cursor-pointer rounded-full bg-blue-500 px-7 py-3 font-semibold text-white transition hover:bg-blue-400"
+          className="cursor-pointer rounded-full bg-blue-500 px-7 py-3 font-semibold text-white transition hover:bg-blue-400 flex items-center"
         >
-          Create room
+          {createRoomLoading ? (
+            <SyncLoader size={5} color="#fff" />
+          ) : (
+            "Create room"
+          )}
         </button>
 
         <button className="cursor-pointer rounded-full border border-slate-700 px-7 py-3 text-slate-100 transition hover:bg-slate-900">
