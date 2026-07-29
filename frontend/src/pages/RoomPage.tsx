@@ -10,12 +10,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const RoomPage = () => {
   const loadRoom = useRoomStore((state) => state.loadRoom);
+  const loadRoomLoading = useRoomStore((state) => state.loadRoomLoading);
 
   const { roomId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!roomId) {
+      navigate("/error");
       return;
     }
 
@@ -30,7 +32,11 @@ const RoomPage = () => {
     };
 
     initRoom();
-  }, [roomId, navigate, loadRoom]);
+  }, [roomId, loadRoom, navigate]);
+
+  if (loadRoomLoading) {
+    return;
+  }
 
   return (
     <>
