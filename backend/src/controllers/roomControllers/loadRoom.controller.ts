@@ -39,13 +39,10 @@ const loadRoomController = async (req: Request, res: Response) => {
       (id) => id.toString() === user._id.toString(),
     );
 
-    if (!isUserInRoom)
-      return res.status(403).json({
-        success: false,
-        code: "userNotInRoom",
-        message:
-          "You do not have access to this room. Please enter through join code",
-      });
+    if (!isUserInRoom) {
+      room.users.push(user._id);
+      await room.save();
+    }
 
     return res.status(200).json({
       success: true,

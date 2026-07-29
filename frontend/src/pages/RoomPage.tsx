@@ -6,26 +6,31 @@ import Fonts from "../styles/Fonts";
 
 import useRoomStore from "../stores/room.store";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const RoomPage = () => {
   const loadRoom = useRoomStore((state) => state.loadRoom);
 
   const { roomId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const initRoom = async () => {
-      if (!roomId) return;
+    if (!roomId) {
+      return;
+    }
 
+    const initRoom = async () => {
       const room = await loadRoom(roomId);
 
-      if (room) {
-        console.log("Room loaded:", room);
+      console.log("Loaded room:", room);
+
+      if (!room) {
+        navigate("/error");
       }
     };
 
     initRoom();
-  }, [roomId, loadRoom]);
+  }, [roomId, navigate, loadRoom]);
 
   return (
     <>
