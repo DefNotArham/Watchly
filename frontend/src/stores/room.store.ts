@@ -22,7 +22,7 @@ const useRoomStore = create<RoomStoreType>((set) => ({
   currentRoom: null,
 
   // Loading
-  createRoomLoading: false,
+  createRoomLoading: true,
 
   createRoom: async () => {
     set({ createRoomLoading: true });
