@@ -2,6 +2,8 @@ import RoomHeader from "../components/Roompage/RoomHeader";
 import VideoPlayer from "../components/Roompage/VideoPlayer";
 import ChatPanel from "../components/Roompage/ChatPanel";
 
+import RoomSkeleton from "../components/skeletons/RoomSkeleton";
+
 import Fonts from "../styles/Fonts";
 
 import useRoomStore from "../stores/room.store";
@@ -24,8 +26,6 @@ const RoomPage = () => {
     const initRoom = async () => {
       const room = await loadRoom(roomId);
 
-      console.log("Loaded room:", room);
-
       if (!room) {
         navigate("/error");
       }
@@ -35,7 +35,7 @@ const RoomPage = () => {
   }, [roomId, loadRoom, navigate]);
 
   if (loadRoomLoading) {
-    return;
+    return <RoomSkeleton />;
   }
 
   return (
