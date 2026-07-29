@@ -1,9 +1,9 @@
-import { create } from "zustand";
+// import { create } from "zustand";
 
-import api from "../lib/api";
+// import api from "../lib/api";
 
-type UserStoreType = {
-  createUser: (clientId: string) => Promise<void>;
-};
+// type UserStoreType = {
+//   createUser: (clientId: string) => Promise<void>;
+// };
 
-const useUserStore = create<UserStoreType>(() => ({}));
+// const useUserStore = create<UserStoreType>(() => ({}));
