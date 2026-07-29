@@ -15,14 +15,14 @@ type RoomStoreType = {
   // Loading
   createRoomLoading: boolean;
 
-  createRoom: () => Promise<void>;
+  createRoom: () => Promise<RoomType>;
 };
 
 const useRoomStore = create<RoomStoreType>((set) => ({
   currentRoom: null,
 
   // Loading
-  createRoomLoading: true,
+  createRoomLoading: false,
 
   createRoom: async () => {
     set({ createRoomLoading: true });
@@ -45,6 +45,8 @@ const useRoomStore = create<RoomStoreType>((set) => ({
           createRoomLoading: false,
         });
       }
+
+      return response.data.room;
     } catch (error) {
       console.log(error);
       set({ createRoomLoading: false });

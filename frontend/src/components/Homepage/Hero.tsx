@@ -4,7 +4,7 @@ import useRoomStore from "../../stores/room.store";
 import { SyncLoader } from "react-spinners";
 
 const Hero = () => {
-  const { createRoom, createRoomLoading, currentRoom } = useRoomStore();
+  const { createRoom, createRoomLoading } = useRoomStore();
   const navigate = useNavigate();
 
   return (
@@ -24,10 +24,10 @@ const Hero = () => {
       <div className="mt-8 flex gap-4">
         <button
           onClick={async () => {
-            await createRoom();
+            const room = await createRoom();
 
-            if (currentRoom) {
-              navigate(`/room/:${currentRoom._id}`);
+            if (room) {
+              navigate(`/room/${room._id}`);
             }
           }}
           className="cursor-pointer rounded-full bg-blue-500 px-7 py-3 font-semibold text-white transition hover:bg-blue-400 flex items-center"
