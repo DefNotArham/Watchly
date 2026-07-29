@@ -10,8 +10,7 @@ const PORT = process.env.PORT;
 
 app.use(express.json());
 
-connectDb();
-
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectDb();
   console.log(`Server running on http://localhost:${PORT}`);
 });
