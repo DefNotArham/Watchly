@@ -3,6 +3,8 @@ import useRoomStore from "../../stores/room.store";
 
 import { SyncLoader } from "react-spinners";
 
+import { TypeAnimation } from "react-type-animation";
+
 const Hero = () => {
   const { createRoom, createRoomLoading } = useRoomStore();
   const navigate = useNavigate();
@@ -12,8 +14,21 @@ const Hero = () => {
       <p className="text-sm tracking-[0.3em] text-blue-500">Watchly</p>
 
       <h1 className="font-title mt-5 text-7xl text-slate-100 md:text-8xl">
-        Watch Youtube
+        <TypeAnimation
+          sequence={[
+            "Watch Videos",
+            2000,
+            "Share Moments",
+            2000,
+            "Enjoy Content",
+            2000,
+          ]}
+          speed={50}
+          repeat={Infinity}
+        />
+
         <br />
+
         <span className="text-blue-500">Together.</span>
       </h1>
 
