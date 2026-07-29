@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useRoomStore from "../../stores/room.store";
 
-import { OrbitProgress } from "react-loading-indicators";
-
 const Hero = () => {
   const { createRoom, createRoomLoading, currentRoom } = useRoomStore();
   const navigate = useNavigate();
