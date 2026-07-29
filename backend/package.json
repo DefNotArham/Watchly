@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
   "type": "module",
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "tsx": "^4.23.1",
     "typescript": "^7.0.2"
   },
   "dependencies": {
