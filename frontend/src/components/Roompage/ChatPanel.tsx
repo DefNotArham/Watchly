@@ -1,0 +1,87 @@
+import React, { useState } from "react";
+import users from "../../data/user.data";
+import messages from "../../data/messages.data";
+
+const ChatPanel = () => {
+  const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
+
+  return (
+    <div className="flex h-[500px] flex-col rounded-xl border border-slate-800 bg-slate-900">
+      <div className="flex border-b border-slate-800">
+        <button
+          onClick={() => setActiveTab("chat")}
+          className={`cursor-pointer flex-1 py-3 text-sm ${
+            activeTab === "chat"
+              ? "border-b-2 border-blue-500 text-blue-500"
+              : "text-slate-400"
+          }`}
+        >
+          Chat
+        </button>
+
+        <button
+          onClick={() => setActiveTab("users")}
+          className={`cursor-pointer flex-1 py-3 text-sm ${
+            activeTab === "users"
+              ? "border-b-2 border-blue-500 text-blue-500"
+              : "text-slate-400"
+          }`}
+        >
+          Participants
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-5">
+        {activeTab === "chat" && (
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <div key={message.id}>
+                <span className="font-semibold text-blue-400">
+                  {message.username}
+                </span>
+
+                <p className="text-slate-300">{message.message}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === "users" && (
+          <div className="space-y-4">
+            {users.map((user) => (
+              <div
+                key={user.id}
+                className="flex items-center justify-between rounded-lg border border-slate-800 p-3"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-green-500" />
+
+                  <span>{user.username}</span>
+                </div>
+
+                {user.host && <span className="text-yellow-400">👑</span>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {activeTab === "chat" && (
+        <div className="border-t border-slate-800 p-4">
+          <div className="flex gap-3">
+            <input
+              placeholder="Message..."
+              className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-blue-500"
+            />
+
+            <button className="cursor-pointer rounded-lg bg-blue-500 px-5 hover:bg-blue-400">
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ChatPanel;
