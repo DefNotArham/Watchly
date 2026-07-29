@@ -11,13 +11,22 @@ type RoomType = {
 
 type RoomStoreType = {
   currentRoom: RoomType | null;
+
+  // Loading
+  createRoomLoading: boolean;
+
   createRoom: () => Promise<void>;
 };
 
 const useRoomStore = create<RoomStoreType>((set) => ({
   currentRoom: null,
 
+  // Loading
+  createRoomLoading: false,
+
   createRoom: async () => {
+    set({ createRoomLoading: true });
+
     try {
       const clientId = localStorage.getItem("clientId");
 
@@ -33,10 +42,12 @@ const useRoomStore = create<RoomStoreType>((set) => ({
       if (response.data.success) {
         set({
           currentRoom: response.data.room,
+          createRoomLoading: false,
         });
       }
     } catch (error) {
       console.log(error);
+      set({ createRoomLoading: false });
     }
   },
 }));
