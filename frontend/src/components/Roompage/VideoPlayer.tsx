@@ -1,5 +1,5 @@
 const VideoPlayer = () => (
-  <div className="flex aspect-video items-center justify-center rounded-xl border border-slate-800 bg-black">
+  <div className="flex h-full min-h-0 items-center justify-center rounded-xl border border-slate-800 bg-black">
     <div className="text-center">
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-500 text-3xl">
         ▶

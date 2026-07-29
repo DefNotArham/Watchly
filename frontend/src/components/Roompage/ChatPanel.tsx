@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
 import users from "../../data/user.data";
 import messages from "../../data/messages.data";
 
@@ -6,7 +7,8 @@ const ChatPanel = () => {
   const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
 
   return (
-    <div className="flex h-[500px] flex-col rounded-xl border border-slate-800 bg-slate-900">
+    <div className="flex h-full min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900">
+      {/* Tabs */}
       <div className="flex border-b border-slate-800">
         <button
           onClick={() => setActiveTab("chat")}
@@ -31,6 +33,7 @@ const ChatPanel = () => {
         </button>
       </div>
 
+      {/* Content */}
       <div className="flex-1 overflow-y-auto p-5">
         {activeTab === "chat" && (
           <div className="space-y-4">
@@ -66,6 +69,7 @@ const ChatPanel = () => {
         )}
       </div>
 
+      {/* Chat Input */}
       {activeTab === "chat" && (
         <div className="border-t border-slate-800 p-4">
           <div className="flex gap-3">
