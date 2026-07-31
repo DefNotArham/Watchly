@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 import useRoomStore from "../../stores/room.store";
 
 import { SyncLoader } from "react-spinners";
-
 import { TypeAnimation } from "react-type-animation";
-import { useState } from "react";
+import { MdError } from "react-icons/md";
 
 const Hero = () => {
   const {
@@ -104,7 +105,10 @@ const Hero = () => {
             />
 
             {joinRoomError && (
-              <p className="mt-3 text-sm text-red-500">{joinRoomError}</p>
+              <p className="mt-3 text-sm text-red-500 flex items-center gap-2 justify-center">
+                <MdError />
+                {joinRoomError}
+              </p>
             )}
 
             <div className="mt-6 flex gap-3">
