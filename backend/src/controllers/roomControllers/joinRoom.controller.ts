@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import User from "../../models/User.model.js";
 import Room from "../../models/Room.model.js";
 
-const joinRoom = async (req: Request, res: Response) => {
+const joinRoomController = async (req: Request, res: Response) => {
   const { clientId, joinCode } = req.body;
   try {
     if (!clientId)
@@ -51,4 +51,4 @@ const joinRoom = async (req: Request, res: Response) => {
   }
 };
 
-export default joinRoom;
+export default joinRoomController;
