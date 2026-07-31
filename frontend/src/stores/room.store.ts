@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import api from "../lib/api";
+import axios from "axios";
 
 type UserType = {
   _id: string;
@@ -21,9 +22,15 @@ type RoomStoreType = {
   // Loading
   createRoomLoading: boolean;
   loadRoomLoading: boolean;
+  joinRoomLoading: boolean;
 
+  // Errors
+  joinRoomError: null;
+
+  // functions
   createRoom: () => Promise<RoomType | null>;
   loadRoom: (roomId: string) => Promise<RoomType | null>;
+  joinRoom: (joinCode: string) => Promise<RoomType | null>;
 };
 
 const useRoomStore = create<RoomStoreType>((set) => ({
@@ -32,6 +39,10 @@ const useRoomStore = create<RoomStoreType>((set) => ({
   // Loading
   createRoomLoading: false,
   loadRoomLoading: false,
+  joinRoomLoading: false,
+
+  // Errors
+  joinRoomError: null,
 
   createRoom: async () => {
     set({ createRoomLoading: true });
@@ -96,6 +107,37 @@ const useRoomStore = create<RoomStoreType>((set) => ({
       console.log(error);
       set({ loadRoomLoading: false });
       return null;
+    }
+  },
+
+  joinRoom: async (joinCode: string) => {
+    set({ joinRoomLoading: true });
+    try {
+      const clientId = localStorage.getItem("clientId");
+
+      if (!clientId) {
+        console.log("No clientId found");
+        return null;
+      }
+
+      const response = await api.post("join-code", { clientId, joinCode });
+
+      if (response.data.success) {
+        const room = response.data.room;
+        set({ currentRoom: room, joinRoomLoading: false });
+
+        return room;
+      }
+
+      return null;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+        set({
+          joinRoomError: error.response?.data?.message,
+          joinRoomLoading: false,
+        });
+      }
     }
   },
 }));
