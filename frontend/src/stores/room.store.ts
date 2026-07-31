@@ -25,7 +25,7 @@ type RoomStoreType = {
   joinRoomLoading: boolean;
 
   // Errors
-  joinRoomError: null;
+  joinRoomError: string | null;
 
   // functions
   createRoom: () => Promise<RoomType | null>;
@@ -111,7 +111,7 @@ const useRoomStore = create<RoomStoreType>((set) => ({
   },
 
   joinRoom: async (joinCode: string) => {
-    set({ joinRoomLoading: true });
+    set({ joinRoomLoading: true, joinRoomError: null });
     try {
       const clientId = localStorage.getItem("clientId");
 
@@ -120,7 +120,10 @@ const useRoomStore = create<RoomStoreType>((set) => ({
         return null;
       }
 
-      const response = await api.post("join-code", { clientId, joinCode });
+      const response = await api.post("/room/join-room", {
+        clientId,
+        joinCode,
+      });
 
       if (response.data.success) {
         const room = response.data.room;
@@ -139,6 +142,10 @@ const useRoomStore = create<RoomStoreType>((set) => ({
         });
       }
     }
+
+    setTimeout(() => {
+      set({ joinRoomError: null });
+    }, 3000);
   },
 }));
 

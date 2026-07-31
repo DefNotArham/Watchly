@@ -4,10 +4,22 @@ import useRoomStore from "../../stores/room.store";
 import { SyncLoader } from "react-spinners";
 
 import { TypeAnimation } from "react-type-animation";
+import { useState } from "react";
 
 const Hero = () => {
-  const { createRoom, createRoomLoading } = useRoomStore();
+  const {
+    createRoom,
+    createRoomLoading,
+    joinRoom,
+    joinRoomLoading,
+    joinRoomError,
+  } = useRoomStore();
+
   const navigate = useNavigate();
+
+  const [isJoinRoom, setIsJoinRoom] = useState(false);
+
+  const [joinCode, setJoinCode] = useState("");
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 py-24 text-center">
@@ -54,10 +66,76 @@ const Hero = () => {
           )}
         </button>
 
-        <button className="cursor-pointer rounded-full border border-slate-700 px-7 py-3 text-slate-100 transition hover:bg-slate-900">
+        <button
+          onClick={() => {
+            setIsJoinRoom(true);
+          }}
+          className="cursor-pointer rounded-full border border-slate-700 px-7 py-3 text-slate-100 transition hover:bg-slate-900"
+        >
           Join Room
         </button>
       </div>
+
+      {isJoinRoom && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-slate-100">
+                Join a Room
+              </h2>
+
+              <button
+                onClick={() => setIsJoinRoom(false)}
+                className="cursor-pointer text-2xl text-slate-400 transition hover:text-white"
+              >
+                ×
+              </button>
+            </div>
+
+            <p className="mt-2 text-sm text-slate-400">
+              Enter the room code to join your friends.
+            </p>
+
+            <input
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              placeholder="Room Code"
+              className="mt-6 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-center text-lg uppercase tracking-[0.3em] text-slate-100 outline-none transition focus:border-blue-500"
+            />
+
+            {joinRoomError && (
+              <p className="mt-3 text-sm text-red-500">{joinRoomError}</p>
+            )}
+
+            <div className="mt-6 flex gap-3">
+              <button
+                disabled={joinRoomLoading}
+                onClick={() => setIsJoinRoom(false)}
+                className="flex-1 cursor-pointer rounded-lg border border-slate-700 py-3 text-slate-300 transition hover:bg-slate-800"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={async () => {
+                  const room = await joinRoom(joinCode);
+                  if (room) {
+                    navigate(`/room/${room._id}`);
+                  }
+                }}
+                disabled={joinRoomLoading}
+                className="flex flex-1 items-center justify-center rounded-lg bg-blue-500 py-3 font-medium text-white transition hover:bg-blue-400 cursor-pointer"
+              >
+                {joinRoomLoading ? (
+                  <SyncLoader size={6} color="#fff" />
+                ) : (
+                  "Join"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
