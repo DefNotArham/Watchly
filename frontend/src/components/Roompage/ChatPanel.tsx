@@ -1,10 +1,13 @@
 import { useState } from "react";
 
-import users from "../../data/user.data";
 import messages from "../../data/messages.data";
+
+import useRoomStore from "../../stores/room.store";
 
 const ChatPanel = () => {
   const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
+
+  const currentRoom = useRoomStore((state) => state.currentRoom);
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900">
@@ -51,18 +54,19 @@ const ChatPanel = () => {
 
         {activeTab === "users" && (
           <div className="space-y-4">
-            {users.map((user) => (
+            {currentRoom?.users.map((user) => (
               <div
-                key={user.id}
+                key={user._id}
                 className="flex items-center justify-between rounded-lg border border-slate-800 p-3"
               >
                 <div className="flex items-center gap-3">
                   <div className="h-3 w-3 rounded-full bg-green-500" />
-
                   <span>{user.username}</span>
                 </div>
 
-                {user.host && <span className="text-yellow-400">👑</span>}
+                {currentRoom.owner._id === user._id && (
+                  <span className="text-yellow-400">👑</span>
+                )}
               </div>
             ))}
           </div>

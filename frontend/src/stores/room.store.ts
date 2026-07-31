@@ -2,10 +2,16 @@ import { create } from "zustand";
 
 import api from "../lib/api";
 
+type UserType = {
+  _id: string;
+  clientId: string;
+  username: string;
+};
+
 type RoomType = {
   _id: string;
-  owner: string;
-  users: string[];
+  owner: UserType;
+  users: UserType[];
   joinCode: string;
 };
 
