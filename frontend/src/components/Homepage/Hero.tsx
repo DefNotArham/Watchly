@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import useRoomStore from "../../stores/room.store";
 
 import { SyncLoader } from "react-spinners";
 import { TypeAnimation } from "react-type-animation";
 import { MdError } from "react-icons/md";
+import useUserStore from "../../stores/user.store";
 
 const Hero = () => {
   const {
@@ -16,11 +17,22 @@ const Hero = () => {
     joinRoomError,
   } = useRoomStore();
 
+  const user = useUserStore((state) => state.user);
+
   const navigate = useNavigate();
 
   const [isJoinRoom, setIsJoinRoom] = useState(false);
 
+  const [createRoomPopup, setCreateRoomPopup] = useState(false);
+
   const [joinCode, setJoinCode] = useState("");
+  const [username, setUsername] = useState(user?.username);
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 py-24 text-center">
@@ -51,12 +63,8 @@ const Hero = () => {
 
       <div className="mt-8 flex gap-4">
         <button
-          onClick={async () => {
-            const room = await createRoom();
-
-            if (room) {
-              navigate(`/room/${room._id}`);
-            }
+          onClick={() => {
+            setCreateRoomPopup(true);
           }}
           className="cursor-pointer rounded-full bg-blue-500 px-7 py-3 font-semibold text-white transition hover:bg-blue-400 flex items-center"
         >
@@ -98,10 +106,18 @@ const Hero = () => {
             </p>
 
             <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="mt-6 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-center text-lg uppercase tracking-[0.3em] text-slate-100 outline-none transition focus:border-blue-500"
+            />
+
+            <input
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
               placeholder="Room Code"
-              className="mt-6 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-center text-lg uppercase tracking-[0.3em] text-slate-100 outline-none transition focus:border-blue-500"
+              className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-center text-lg uppercase tracking-[0.3em] text-slate-100 outline-none transition focus:border-blue-500"
             />
 
             {joinRoomError && (
@@ -134,6 +150,65 @@ const Hero = () => {
                   <SyncLoader size={6} color="#fff" />
                 ) : (
                   "Join"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {createRoomPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-slate-100">
+                Create a Room
+              </h2>
+
+              <button
+                onClick={() => setCreateRoomPopup(false)}
+                className="cursor-pointer text-2xl text-slate-400 transition hover:text-white"
+              >
+                ×
+              </button>
+            </div>
+
+            <p className="mt-2 text-sm text-slate-400">
+              Choose a username before creating your room.
+            </p>
+
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="mt-6 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-500"
+            />
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => setCreateRoomPopup(false)}
+                className="flex-1 cursor-pointer rounded-lg border border-slate-700 py-3 text-slate-300 transition hover:bg-slate-800"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={async () => {
+                  const room = await createRoom();
+
+                  if (room) {
+                    setCreateRoomPopup(false);
+                    navigate(`/room/${room._id}`);
+                  }
+                }}
+                disabled={createRoomLoading}
+                className="flex flex-1 items-center justify-center rounded-lg bg-blue-500 py-3 font-medium text-white transition hover:bg-blue-400 cursor-pointer"
+              >
+                {createRoomLoading ? (
+                  <SyncLoader size={6} color="#fff" />
+                ) : (
+                  "Create"
                 )}
               </button>
             </div>
