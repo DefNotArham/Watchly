@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { createServer } from "http";
+import { initSocket } from "./socket/socket.io.js";
 
 import connectDb from "./db/connectDB.js";
 
@@ -27,6 +28,8 @@ app.use(
 
 app.use("/user", userRoutes);
 app.use("/room", roomRoutes);
+
+initSocket(httpServer);
 
 httpServer.listen(PORT, async () => {
   await connectDb();
