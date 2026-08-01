@@ -4,6 +4,8 @@ import messages from "../../data/messages.data";
 
 import useRoomStore from "../../stores/room.store";
 
+import { FaCrown } from "react-icons/fa6";
+
 const ChatPanel = () => {
   const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
 
@@ -65,7 +67,7 @@ const ChatPanel = () => {
                 </div>
 
                 {currentRoom.owner._id === user._id && (
-                  <span className="text-yellow-400">👑</span>
+                  <FaCrown className="text-lg text-yellow-400 drop-shadow-sm" />
                 )}
               </div>
             ))}
