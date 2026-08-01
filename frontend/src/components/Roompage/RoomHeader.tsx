@@ -2,7 +2,11 @@ import { useNavigate } from "react-router-dom";
 
 import useRoomStore from "../../stores/room.store";
 
-const RoomHeader = () => {
+type Props = {
+  onInvite: () => void;
+};
+
+const RoomHeader = ({ onInvite }: Props) => {
   const navigate = useNavigate();
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
@@ -50,7 +54,10 @@ const RoomHeader = () => {
 
         {/* Actions */}
         <div className="flex gap-2 sm:gap-3">
-          <button className="cursor-pointer rounded-lg border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900 sm:px-4 sm:text-sm">
+          <button
+            onClick={onInvite}
+            className="cursor-pointer rounded-lg border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900 sm:px-4 sm:text-sm"
+          >
             Copy Invite
           </button>
 

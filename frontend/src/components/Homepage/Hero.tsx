@@ -21,7 +21,7 @@ const Hero = () => {
 
   const navigate = useNavigate();
 
-  const [isJoinRoom, setIsJoinRoom] = useState(false);
+  const [joinRoomPopup, setJoinRoomPopup] = useState(false);
 
   const [createRoomPopup, setCreateRoomPopup] = useState(false);
 
@@ -79,7 +79,7 @@ const Hero = () => {
 
         <button
           onClick={() => {
-            setIsJoinRoom(true);
+            setJoinRoomPopup(true);
           }}
           className="cursor-pointer rounded-full border border-slate-700 px-7 py-3 text-slate-100 transition hover:bg-slate-900"
         >
@@ -87,16 +87,22 @@ const Hero = () => {
         </button>
       </div>
 
-      {isJoinRoom && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+      {joinRoomPopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setJoinRoomPopup(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-slate-100">
                 Join a Room
               </h2>
 
               <button
-                onClick={() => setIsJoinRoom(false)}
+                onClick={() => setJoinRoomPopup(false)}
                 className="cursor-pointer text-2xl text-slate-400 transition hover:text-white"
               >
                 ×
@@ -136,7 +142,7 @@ const Hero = () => {
             <div className="mt-6 flex gap-3">
               <button
                 disabled={joinRoomLoading}
-                onClick={() => setIsJoinRoom(false)}
+                onClick={() => setJoinRoomPopup(false)}
                 className="flex-1 cursor-pointer rounded-lg border border-slate-700 py-3 text-slate-300 transition hover:bg-slate-800"
               >
                 Cancel
@@ -175,8 +181,14 @@ const Hero = () => {
       )}
 
       {createRoomPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setCreateRoomPopup(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-slate-100">
                 Create a Room
