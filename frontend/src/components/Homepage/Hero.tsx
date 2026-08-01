@@ -26,7 +26,9 @@ const Hero = () => {
   const [createRoomPopup, setCreateRoomPopup] = useState(false);
 
   const [joinCode, setJoinCode] = useState("");
-  const [username, setUsername] = useState(user?.username);
+  const [username, setUsername] = useState(user?.username ?? "");
+
+  const [usernameError, setUsernameError] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -120,6 +122,10 @@ const Hero = () => {
               className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-center text-lg uppercase tracking-[0.3em] text-slate-100 outline-none transition focus:border-blue-500"
             />
 
+            {usernameError && (
+              <p className="mt-2 text-sm text-red-500">{usernameError}</p>
+            )}
+
             {joinRoomError && (
               <p className="mt-3 text-sm text-red-500 flex items-center gap-2 justify-center">
                 <MdError />
@@ -138,7 +144,18 @@ const Hero = () => {
 
               <button
                 onClick={async () => {
-                  const room = await joinRoom(joinCode);
+                  if (!username.trim()) {
+                    setUsernameError("Username is required");
+
+                    setTimeout(() => {
+                      setUsernameError("");
+                    }, 3000);
+                    return;
+                  }
+
+                  setUsernameError("");
+
+                  const room = await joinRoom(joinCode, username);
                   if (room) {
                     navigate(`/room/${room._id}`);
                   }
@@ -185,6 +202,10 @@ const Hero = () => {
               className="mt-6 w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-blue-500"
             />
 
+            {usernameError && (
+              <p className="mt-2 text-sm text-red-500">{usernameError}</p>
+            )}
+
             <div className="mt-6 flex gap-3">
               <button
                 onClick={() => setCreateRoomPopup(false)}
@@ -195,7 +216,18 @@ const Hero = () => {
 
               <button
                 onClick={async () => {
-                  const room = await createRoom();
+                  if (!username.trim()) {
+                    setUsernameError("Username is required");
+
+                    setTimeout(() => {
+                      setUsernameError("");
+                    }, 3000);
+                    return;
+                  }
+
+                  setUsernameError("");
+
+                  const room = await createRoom(username);
 
                   if (room) {
                     setCreateRoomPopup(false);

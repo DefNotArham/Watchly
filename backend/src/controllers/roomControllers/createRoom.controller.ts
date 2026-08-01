@@ -5,13 +5,14 @@ import Room from "../../models/Room.model.js";
 
 type clientType = {
   clientId: string;
+  username?: string;
 };
 
 const createRoomController = async (
   req: Request<{}, {}, clientType>,
   res: Response,
 ) => {
-  const { clientId } = req.body;
+  const { clientId, username } = req.body;
 
   try {
     if (!clientId)
@@ -26,6 +27,18 @@ const createRoomController = async (
         success: false,
         message: "User not found",
       });
+
+    if (!username || !username.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Username is required",
+      });
+    }
+
+    if (username && username.trim() && username !== user.username) {
+      user.username = username.trim();
+      await user.save();
+    }
 
     const room = await Room.create({
       owner: user?._id,
