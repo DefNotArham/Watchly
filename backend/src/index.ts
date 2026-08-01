@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { createServer } from "http";
 
 import connectDb from "./db/connectDB.js";
 
@@ -10,6 +11,8 @@ import roomRoutes from "./routes/room.routes.js";
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
+
 const PORT = process.env.PORT;
 const frontend = process.env.FRONTEND;
 
@@ -25,7 +28,7 @@ app.use(
 app.use("/user", userRoutes);
 app.use("/room", roomRoutes);
 
-app.listen(PORT, async () => {
+httpServer.listen(PORT, async () => {
   await connectDb();
   console.log(`Server running on http://localhost:${PORT}`);
 });
