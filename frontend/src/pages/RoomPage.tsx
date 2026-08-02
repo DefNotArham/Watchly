@@ -1,7 +1,6 @@
 import RoomHeader from "../components/Roompage/RoomHeader";
 import VideoPlayer from "../components/Roompage/VideoPlayer";
 import ChatPanel from "../components/Roompage/ChatPanel";
-
 import RoomSkeleton from "../components/skeletons/RoomSkeleton";
 
 import Fonts from "../styles/Fonts";
@@ -10,8 +9,11 @@ import { CiLink } from "react-icons/ci";
 import { GoNumber } from "react-icons/go";
 
 import useRoomStore from "../stores/room.store";
+
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+import socket from "../lib/socket.io";
 
 const RoomPage = () => {
   const loadRoom = useRoomStore((state) => state.loadRoom);
@@ -42,6 +44,18 @@ const RoomPage = () => {
 
     initRoom();
   }, [roomId, loadRoom, navigate]);
+
+  useEffect(() => {
+    const clientId = localStorage.getItem("clientId");
+
+    socket.connect();
+
+    socket.emit("join-room", { clientId, roomId });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [roomId]);
 
   if (loadRoomLoading) {
     return <RoomSkeleton />;
