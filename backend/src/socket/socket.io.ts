@@ -46,6 +46,12 @@ export const initSocket = (server: any) => {
 
         socket.join(roomId);
 
+        const updatedRoom = await Room.findById(roomId)
+          .populate("users")
+          .populate("owner");
+
+        io.to(roomId).emit("room-updated", updatedRoom);
+
         socket.data.clientId = clientId;
         socket.data.roomId = roomId;
 
@@ -70,6 +76,12 @@ export const initSocket = (server: any) => {
             users: user._id,
           },
         });
+
+        const updatedRoom = await Room.findById(roomId)
+          .populate("users")
+          .populate("owner");
+
+        io.to(roomId).emit("room-updated", updatedRoom);
 
         console.log(`${clientId} left room ${roomId}`);
       } catch (error) {

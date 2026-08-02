@@ -18,6 +18,7 @@ type RoomType = {
 
 type RoomStoreType = {
   currentRoom: RoomType | null;
+  updateParticipants: (users: UserType[]) => void;
 
   // Loading
   createRoomLoading: boolean;
@@ -35,6 +36,17 @@ type RoomStoreType = {
 
 const useRoomStore = create<RoomStoreType>((set) => ({
   currentRoom: null,
+
+  updateParticipants(users: UserType[]) {
+    set((state) => ({
+      currentRoom: state.currentRoom
+        ? {
+            ...state.currentRoom,
+            users,
+          }
+        : null,
+    }));
+  },
 
   // Loading
   createRoomLoading: false,

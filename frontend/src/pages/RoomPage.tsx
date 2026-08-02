@@ -20,6 +20,8 @@ const RoomPage = () => {
   const loadRoomLoading = useRoomStore((state) => state.loadRoomLoading);
   const currentRoom = useRoomStore((state) => state.currentRoom);
 
+  const updateParticipants = useRoomStore((state) => state.updateParticipants);
+
   const { roomId } = useParams();
   const navigate = useNavigate();
 
@@ -48,18 +50,23 @@ const RoomPage = () => {
 
   // Sockets
   useEffect(() => {
-    if (!currentRoom) return;
+    if (!roomId) return;
 
     const clientId = localStorage.getItem("clientId");
 
     socket.connect();
 
-    socket.emit("join-room", { clientId, roomId: currentRoom._id });
+    socket.emit("join-room", { clientId, roomId });
+
+    socket.on("room-updated", (room) => {
+      updateParticipants(room.users);
+    });
 
     return () => {
+      socket.off("room-updated");
       socket.disconnect();
     };
-  }, [currentRoom]);
+  }, [roomId]);
 
   if (loadRoomLoading) {
     return <RoomSkeleton />;
