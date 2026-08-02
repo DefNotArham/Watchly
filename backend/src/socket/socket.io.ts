@@ -28,21 +28,11 @@ export const initSocket = (server: any) => {
           return;
         }
 
-        const room = await Room.findById(roomId);
-
-        if (!room) {
-          console.log("Room not found");
-          return;
-        }
-
-        const isUserInRoom = room.users.some(
-          (id) => id.toString() === user._id.toString(),
-        );
-
-        if (!isUserInRoom) {
-          room.users.push(user._id);
-          await room.save();
-        }
+        await Room.findByIdAndUpdate(roomId, {
+          $addToSet: {
+            users: user._id,
+          },
+        });
 
         socket.join(roomId);
 
@@ -61,21 +51,22 @@ export const initSocket = (server: any) => {
       }
     });
 
-    socket.on("disconnect", async () => {
+    socket.on("leave-room", async ({ clientId, roomId }) => {
       try {
-        const { clientId, roomId } = socket.data;
-
-        if (!clientId || !roomId) return;
-
         const user = await User.findOne({ clientId });
 
-        if (!user) return;
+        if (!user) {
+          console.log("User not found");
+          return;
+        }
 
         await Room.findByIdAndUpdate(roomId, {
           $pull: {
             users: user._id,
           },
         });
+
+        socket.leave(roomId);
 
         const updatedRoom = await Room.findById(roomId)
           .populate("users")
@@ -87,6 +78,10 @@ export const initSocket = (server: any) => {
       } catch (error) {
         console.log(error);
       }
+    });
+
+    socket.on("disconnect", async () => {
+      console.log("User disconnected", socket.id);
     });
   });
 

@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
 import useRoomStore from "../../stores/room.store";
+import socket from "../../lib/socket.io";
 
 type Props = {
   onInvite: () => void;
+  roomId: string;
 };
 
-const RoomHeader = ({ onInvite }: Props) => {
+const RoomHeader = ({ onInvite, roomId }: Props) => {
   const navigate = useNavigate();
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
@@ -62,7 +64,18 @@ const RoomHeader = ({ onInvite }: Props) => {
           </button>
 
           <button
-            onClick={() => navigate("/")}
+            onClick={() => {
+              const clientId = localStorage.getItem("clientId");
+
+              socket.emit("leave-room", {
+                clientId,
+                roomId,
+              });
+
+              socket.disconnect();
+
+              navigate("/");
+            }}
             className="cursor-pointer rounded-lg bg-red-600 px-3 py-2 text-xs hover:bg-red-500 sm:px-4 sm:text-sm"
           >
             Leave Room

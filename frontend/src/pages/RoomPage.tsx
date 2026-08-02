@@ -63,6 +63,11 @@ const RoomPage = () => {
     });
 
     return () => {
+      socket.emit("leave-room", {
+        clientId,
+        roomId,
+      });
+
       socket.off("room-updated");
       socket.disconnect();
     };
@@ -77,7 +82,7 @@ const RoomPage = () => {
       <Fonts />
 
       <div className="flex h-screen flex-col overflow-hidden bg-slate-950 text-slate-100">
-        <RoomHeader onInvite={() => setInviteOpen(true)} />
+        <RoomHeader onInvite={() => setInviteOpen(true)} roomId={roomId!} />
 
         <main className="flex flex-1 overflow-hidden p-6">
           <div className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_350px]">
