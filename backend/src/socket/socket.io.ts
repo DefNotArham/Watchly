@@ -60,6 +60,8 @@ export const initSocket = (server: any) => {
           return;
         }
 
+        const roomBefore = await Room.findById(roomId);
+
         await Room.findByIdAndUpdate(roomId, {
           $pull: {
             users: user._id,

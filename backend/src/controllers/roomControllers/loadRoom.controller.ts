@@ -35,16 +35,7 @@ const loadRoomController = async (req: Request, res: Response) => {
         message: "Room not found",
       });
 
-    const isUserInRoom = room.users.some(
-      (roomUser) => roomUser._id.toString() === user._id.toString(),
-    );
-
-    if (!isUserInRoom) {
-      room.users.push(user._id);
-      await room.save();
-
-      room = await Room.findById(roomId).populate("users").populate("owner");
-    }
+    room = await Room.findById(roomId).populate("users").populate("owner");
 
     return res.status(200).json({
       success: true,

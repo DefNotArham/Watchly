@@ -54,6 +54,11 @@ const RoomPage = () => {
 
     const clientId = localStorage.getItem("clientId");
 
+    console.log("Joining room:", {
+      clientId,
+      roomId,
+    });
+
     socket.connect();
 
     socket.emit("join-room", { clientId, roomId });
