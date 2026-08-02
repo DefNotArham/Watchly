@@ -28,6 +28,7 @@ const RoomPage = () => {
   const [linkCopied, setLinkCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
+  // Load room
   useEffect(() => {
     if (!roomId) {
       navigate("/error");
@@ -45,17 +46,20 @@ const RoomPage = () => {
     initRoom();
   }, [roomId, loadRoom, navigate]);
 
+  // Sockets
   useEffect(() => {
+    if (!currentRoom) return;
+
     const clientId = localStorage.getItem("clientId");
 
     socket.connect();
 
-    socket.emit("join-room", { clientId, roomId });
+    socket.emit("join-room", { clientId, roomId: currentRoom._id });
 
     return () => {
       socket.disconnect();
     };
-  }, [roomId]);
+  }, [currentRoom]);
 
   if (loadRoomLoading) {
     return <RoomSkeleton />;

@@ -16,6 +16,11 @@ export const initSocket = (server: any) => {
   io.on("connection", (socket) => {
     console.log("User conencted", socket.id);
 
+    socket.on("join-room", ({ clientId, roomId }) => {
+      socket.join(roomId);
+      console.log(`${clientId} joined room ${roomId}`);
+    });
+
     socket.on("disconnect", () => {
       console.log("User disconnected", socket.id);
     });
