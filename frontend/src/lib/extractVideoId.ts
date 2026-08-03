@@ -16,7 +16,6 @@ const extractVideoId = (input: string) => {
 
     return url.searchParams.get("v");
   } catch {
-    // If they paste only the video ID
     return input;
   }
 };

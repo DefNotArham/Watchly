@@ -1,17 +1,27 @@
 import { useNavigate } from "react-router-dom";
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 import useRoomStore from "../../stores/room.store";
+
 import socket from "../../lib/socket.io";
+
+import extractVideoId from "../../lib/extractVideoId";
 
 type Props = {
   onInvite: () => void;
   roomId: string;
-  videoId: string;
+  videoInput: string;
+  setVideoInput: Dispatch<SetStateAction<string>>;
   setVideoId: Dispatch<SetStateAction<string>>;
 };
 
-const RoomHeader = ({ onInvite, roomId, videoId, setVideoId }: Props) => {
+const RoomHeader = ({
+  onInvite,
+  roomId,
+  videoInput,
+  setVideoInput,
+  setVideoId,
+}: Props) => {
   const navigate = useNavigate();
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
@@ -29,7 +39,6 @@ const RoomHeader = ({ onInvite, roomId, videoId, setVideoId }: Props) => {
             <img
               src="../logo.png"
               className="w-10 cursor-pointer"
-              alt=""
               onClick={() => navigate("/")}
             />
 
@@ -56,9 +65,21 @@ const RoomHeader = ({ onInvite, roomId, videoId, setVideoId }: Props) => {
               <input
                 placeholder="Paste YouTube link..."
                 className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm outline-none focus:border-blue-500"
+                value={videoInput}
+                onChange={(e) => setVideoInput(e.target.value)}
               />
 
-              <button className="cursor-pointer rounded-lg bg-blue-500 px-5 text-sm font-medium text-white hover:bg-blue-400">
+              <button
+                onClick={() => {
+                  if (!videoInput) return;
+                  const id = extractVideoId(videoInput);
+
+                  if (id) {
+                    setVideoId(id);
+                  }
+                }}
+                className="cursor-pointer rounded-lg bg-blue-500 px-5 text-sm font-medium text-white hover:bg-blue-400"
+              >
                 Load
               </button>
             </>

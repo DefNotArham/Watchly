@@ -31,6 +31,7 @@ const RoomPage = () => {
   const [codeCopied, setCodeCopied] = useState(false);
 
   const [videoId, setVideoId] = useState("");
+  const [videoInput, setVideoInput] = useState("");
 
   // Load room
   useEffect(() => {
@@ -92,7 +93,8 @@ const RoomPage = () => {
         <RoomHeader
           onInvite={() => setInviteOpen(true)}
           roomId={roomId!}
-          videoId={videoId}
+          videoInput={videoInput}
+          setVideoInput={setVideoInput}
           setVideoId={setVideoId}
         />
 
