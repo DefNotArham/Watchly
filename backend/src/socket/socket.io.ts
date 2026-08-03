@@ -21,6 +21,8 @@ export const initSocket = (server: any) => {
 
     socket.on("join-room", async ({ clientId, roomId }) => {
       try {
+        socket.data.clientId = clientId;
+        socket.data.roomId = roomId;
         const user = await User.findOne({ clientId });
 
         if (!user) {
@@ -42,9 +44,6 @@ export const initSocket = (server: any) => {
 
         io.to(roomId).emit("room-updated", updatedRoom);
 
-        socket.data.clientId = clientId;
-        socket.data.roomId = roomId;
-
         console.log(`${clientId} joined room ${roomId}`);
       } catch (error) {
         console.log(error);
@@ -59,8 +58,6 @@ export const initSocket = (server: any) => {
           console.log("User not found");
           return;
         }
-
-        const roomBefore = await Room.findById(roomId);
 
         await Room.findByIdAndUpdate(roomId, {
           $pull: {
@@ -83,7 +80,35 @@ export const initSocket = (server: any) => {
     });
 
     socket.on("disconnect", async () => {
-      console.log("User disconnected", socket.id);
+      try {
+        const { clientId, roomId } = socket.data;
+
+        if (!clientId || !roomId) {
+          return;
+        }
+
+        const user = await User.findOne({ clientId });
+
+        if (!user) {
+          return;
+        }
+
+        await Room.findByIdAndUpdate(roomId, {
+          $pull: {
+            users: user._id,
+          },
+        });
+
+        const updatedRoom = await Room.findById(roomId)
+          .populate("users")
+          .populate("owner");
+
+        io.to(roomId).emit("room-updated", updatedRoom);
+
+        console.log(`${clientId} disconnected from room ${roomId}`);
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 
