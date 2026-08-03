@@ -30,6 +30,8 @@ const RoomPage = () => {
   const [linkCopied, setLinkCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
+  const [videoId, setVideoId] = useState("");
+
   // Load room
   useEffect(() => {
     if (!roomId) {
@@ -87,11 +89,16 @@ const RoomPage = () => {
       <Fonts />
 
       <div className="flex h-screen flex-col overflow-hidden bg-slate-950 text-slate-100">
-        <RoomHeader onInvite={() => setInviteOpen(true)} roomId={roomId!} />
+        <RoomHeader
+          onInvite={() => setInviteOpen(true)}
+          roomId={roomId!}
+          videoId={videoId}
+          setVideoId={setVideoId}
+        />
 
         <main className="flex flex-1 overflow-hidden p-6">
           <div className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_350px]">
-            <VideoPlayer />
+            <VideoPlayer videoId={videoId} />
 
             <ChatPanel />
           </div>

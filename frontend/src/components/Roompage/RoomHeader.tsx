@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import type { Dispatch, SetStateAction } from "react";
 
 import useRoomStore from "../../stores/room.store";
 import socket from "../../lib/socket.io";
@@ -6,9 +7,11 @@ import socket from "../../lib/socket.io";
 type Props = {
   onInvite: () => void;
   roomId: string;
+  videoId: string;
+  setVideoId: Dispatch<SetStateAction<string>>;
 };
 
-const RoomHeader = ({ onInvite, roomId }: Props) => {
+const RoomHeader = ({ onInvite, roomId, videoId, setVideoId }: Props) => {
   const navigate = useNavigate();
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
