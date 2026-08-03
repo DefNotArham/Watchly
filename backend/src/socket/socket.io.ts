@@ -79,6 +79,16 @@ export const initSocket = (server: any) => {
       }
     });
 
+    socket.on("load-video", async ({ roomId, videoId }) => {
+      await Room.findByIdAndUpdate(roomId, {
+        videoId,
+      });
+
+      io.to(roomId).emit("video-loaded", {
+        videoId,
+      });
+    });
+
     socket.on("disconnect", async () => {
       try {
         const { clientId, roomId } = socket.data;

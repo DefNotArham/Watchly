@@ -12,16 +12,9 @@ type Props = {
   roomId: string;
   videoInput: string;
   setVideoInput: Dispatch<SetStateAction<string>>;
-  setVideoId: Dispatch<SetStateAction<string>>;
 };
 
-const RoomHeader = ({
-  onInvite,
-  roomId,
-  videoInput,
-  setVideoInput,
-  setVideoId,
-}: Props) => {
+const RoomHeader = ({ onInvite, roomId, videoInput, setVideoInput }: Props) => {
   const navigate = useNavigate();
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
@@ -75,7 +68,7 @@ const RoomHeader = ({
                   const id = extractVideoId(videoInput);
 
                   if (id) {
-                    setVideoId(id);
+                    socket.emit("load-video", { roomId, videoId: id });
                   }
                 }}
                 className="cursor-pointer rounded-lg bg-blue-500 px-5 text-sm font-medium text-white hover:bg-blue-400"

@@ -30,7 +30,8 @@ const RoomPage = () => {
   const [linkCopied, setLinkCopied] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
-  const [videoId, setVideoId] = useState("");
+  const videoId = currentRoom?.videoId ?? "";
+  const updateVideoId = useRoomStore((state) => state.updateVideoId);
   const [videoInput, setVideoInput] = useState("");
 
   // Load room
@@ -80,6 +81,17 @@ const RoomPage = () => {
       socket.disconnect();
     };
   }, [roomId]);
+  useEffect(() => {
+    const handleVideoLoaded = ({ videoId }: { videoId: string }) => {
+      updateVideoId(videoId);
+    };
+
+    socket.on("video-loaded", handleVideoLoaded);
+
+    return () => {
+      socket.off("video-loaded", handleVideoLoaded);
+    };
+  }, [updateVideoId]);
 
   if (loadRoomLoading) {
     return <RoomSkeleton />;
@@ -95,7 +107,6 @@ const RoomPage = () => {
           roomId={roomId!}
           videoInput={videoInput}
           setVideoInput={setVideoInput}
-          setVideoId={setVideoId}
         />
 
         <main className="flex flex-1 overflow-hidden p-6">

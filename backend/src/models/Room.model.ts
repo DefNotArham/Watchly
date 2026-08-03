@@ -23,6 +23,11 @@ const RoomSchema = new mongoose.Schema(
       uppercase: true,
       default: () => nanoid(8).toUpperCase(),
     },
+
+    videoId: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
