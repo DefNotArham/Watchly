@@ -26,6 +26,7 @@ const VideoPlayer = ({ videoId }: Props) => {
   return (
     <div className="flex h-full min-h-0 items-center justify-center rounded-xl border border-slate-800 bg-black overflow-hidden">
       <YouTube
+        key={videoId}
         videoId={videoId}
         className="h-full w-full"
         iframeClassName="h-full w-full"

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 import useRoomStore from "../../stores/room.store";
 
