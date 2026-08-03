@@ -13,6 +13,10 @@ const RoomHeader = ({ onInvite, roomId }: Props) => {
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
 
+  const clientId = localStorage.getItem("clientId");
+
+  const isOwner = currentRoom?.owner.clientId === clientId;
+
   return (
     <header className="border-b border-slate-800">
       <div className="flex flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between md:px-12">
@@ -44,14 +48,22 @@ const RoomHeader = ({ onInvite, roomId }: Props) => {
 
         {/* Youtube Input */}
         <div className="flex flex-1 gap-2 md:max-w-xl">
-          <input
-            placeholder="Paste YouTube link..."
-            className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm outline-none focus:border-blue-500"
-          />
+          {isOwner ? (
+            <>
+              <input
+                placeholder="Paste YouTube link..."
+                className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm outline-none focus:border-blue-500"
+              />
 
-          <button className="cursor-pointer rounded-lg bg-blue-500 px-5 text-sm font-medium text-white hover:bg-blue-400">
-            Load
-          </button>
+              <button className="cursor-pointer rounded-lg bg-blue-500 px-5 text-sm font-medium text-white hover:bg-blue-400">
+                Load
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-1 items-center justify-center rounded-lg border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-slate-400 md:max-w-xl">
+              Only the room owner can load a video.
+            </div>
+          )}
         </div>
 
         {/* Actions */}
