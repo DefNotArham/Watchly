@@ -15,12 +15,15 @@ type RoomType = {
   users: UserType[];
   joinCode: string;
   videoId: string;
+  currentTime: number;
+  isPlaying: boolean;
 };
 
 type RoomStoreType = {
   currentRoom: RoomType | null;
   updateParticipants: (users: UserType[]) => void;
   updateVideoId: (videoId: string) => void;
+  updateVideoState: (currentTime: number, isPlaying: boolean) => void;
 
   // Loading
   createRoomLoading: boolean;
@@ -45,6 +48,18 @@ const useRoomStore = create<RoomStoreType>((set) => ({
         ? {
             ...state.currentRoom,
             users,
+          }
+        : null,
+    }));
+  },
+
+  updateVideoState(currentTime: number, isPlaying: boolean) {
+    set((state) => ({
+      currentRoom: state.currentRoom
+        ? {
+            ...state.currentRoom,
+            currentTime,
+            isPlaying,
           }
         : null,
     }));

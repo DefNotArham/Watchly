@@ -35,6 +35,7 @@ const RoomSchema = new mongoose.Schema(
     },
     isPlaying: {
       type: Boolean,
+      default: false,
     },
   },
   {

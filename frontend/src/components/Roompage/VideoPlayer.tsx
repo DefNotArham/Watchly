@@ -6,12 +6,16 @@ import socket from "../../lib/socket.io";
 
 type Props = {
   videoId?: string | null;
+  currentTime?: number;
+  isPlaying?: boolean;
 };
 
-const VideoPlayer = ({ videoId }: Props) => {
+const VideoPlayer = ({ videoId, currentTime, isPlaying }: Props) => {
   const currentRoom = useRoomStore((state) => state.currentRoom);
+  const updateVideoState = useRoomStore((state) => state.updateVideoState);
 
   const playerRef = useRef<YouTubePlayer | null>(null);
+  const lastTimeRef = useRef(0);
 
   const roomId = currentRoom?._id;
   const clientId = localStorage.getItem("clientId");
@@ -23,6 +27,7 @@ const VideoPlayer = ({ videoId }: Props) => {
       if (playerRef.current) {
         playerRef.current.seekTo(currentTime, true);
         playerRef.current.playVideo();
+        updateVideoState(currentTime, true);
       }
     });
 
@@ -30,14 +35,44 @@ const VideoPlayer = ({ videoId }: Props) => {
       if (playerRef.current) {
         playerRef.current.seekTo(currentTime, true);
         playerRef.current.pauseVideo();
+        updateVideoState(currentTime, false);
+      }
+    });
+
+    socket.on("video-seek", ({ currentTime }) => {
+      if (playerRef.current) {
+        playerRef.current.seekTo(currentTime, true);
+        updateVideoState(currentTime, currentRoom?.isPlaying ?? false);
       }
     });
 
     return () => {
       socket.off("video-play");
       socket.off("video-pause");
+      socket.off("video-seek");
     };
-  }, []);
+  }, [currentRoom?.isPlaying, updateVideoState]);
+
+  useEffect(() => {
+    if (!isOwner) return;
+
+    const interval = setInterval(() => {
+      if (!playerRef.current) return;
+
+      const currentTime = playerRef.current.getCurrentTime();
+
+      if (Math.abs(currentTime - lastTimeRef.current) > 3) {
+        socket.emit("video-seek", {
+          roomId,
+          currentTime,
+        });
+      }
+
+      lastTimeRef.current = currentTime;
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isOwner, roomId]);
 
   if (!videoId) {
     return (
@@ -64,6 +99,18 @@ const VideoPlayer = ({ videoId }: Props) => {
         videoId={videoId}
         onReady={(event) => {
           playerRef.current = event.target;
+
+          if (currentRoom !== undefined) {
+            event.target.seekTo(currentTime, true);
+          }
+
+          if (isPlaying) {
+            event.target.playVideo();
+          }
+
+          if (isPlaying === false) {
+            event.target.pauseVideo();
+          }
         }}
         onStateChange={(event) => {
           if (!isOwner) return;
@@ -88,7 +135,7 @@ const VideoPlayer = ({ videoId }: Props) => {
           width: "100%",
           height: "100%",
           playerVars: {
-            autoplay: 1,
+            autoplay: 0,
             controls: isOwner ? 1 : 0,
             disablekb: isOwner ? 0 : 1,
           },
