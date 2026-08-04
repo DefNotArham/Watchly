@@ -100,17 +100,19 @@ const VideoPlayer = ({ videoId, currentTime, isPlaying }: Props) => {
         onReady={(event) => {
           playerRef.current = event.target;
 
-          if (currentRoom !== undefined) {
+          if (currentTime !== undefined) {
             event.target.seekTo(currentTime, true);
           }
 
-          if (isPlaying) {
-            event.target.playVideo();
-          }
+          setTimeout(() => {
+            if (isPlaying === true) {
+              event.target.playVideo();
+            }
 
-          if (isPlaying === false) {
-            event.target.pauseVideo();
-          }
+            if (isPlaying === false) {
+              event.target.pauseVideo();
+            }
+          }, 500);
         }}
         onStateChange={(event) => {
           if (!isOwner) return;

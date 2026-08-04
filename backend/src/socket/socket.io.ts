@@ -82,10 +82,14 @@ export const initSocket = (server: any) => {
     socket.on("load-video", async ({ roomId, videoId }) => {
       await Room.findByIdAndUpdate(roomId, {
         videoId,
+        currentTime: 0,
+        isPlaying: false,
       });
 
       io.to(roomId).emit("video-loaded", {
         videoId,
+        currentTime: 0,
+        isPlaying: false,
       });
     });
 
@@ -108,7 +112,6 @@ export const initSocket = (server: any) => {
       try {
         await Room.findByIdAndUpdate(roomId, {
           currentTime,
-          isPlaying: false,
         });
 
         socket.to(roomId).emit("video-pause", {
