@@ -26,8 +26,16 @@ const VideoPlayer = ({ videoId }: Props) => {
       }
     });
 
+    socket.on("video-pause", ({ currentTime }) => {
+      if (playerRef.current) {
+        playerRef.current.seekTo(currentTime, true);
+        playerRef.current.pauseVideo();
+      }
+    });
+
     return () => {
       socket.off("video-play");
+      socket.off("video-pause");
     };
   }, []);
 
@@ -50,7 +58,7 @@ const VideoPlayer = ({ videoId }: Props) => {
   }
 
   return (
-    <div className="flex h-full min-h-0 items-center justify-center rounded-xl border border-slate-800 bg-black overflow-hidden">
+    <div className="flex h-full min-h-0 items-center justify-center rounded-xl border border-slate-800 bg-black overflow-hidden relative">
       <YouTube
         key={videoId}
         videoId={videoId}
@@ -66,6 +74,13 @@ const VideoPlayer = ({ videoId }: Props) => {
               currentTime: playerRef.current?.getCurrentTime(),
             });
           }
+
+          if (event.data === 2) {
+            socket.emit("video-pause", {
+              roomId,
+              currentTime: playerRef.current?.getCurrentTime(),
+            });
+          }
         }}
         className="h-full w-full"
         iframeClassName="h-full w-full"
@@ -74,9 +89,13 @@ const VideoPlayer = ({ videoId }: Props) => {
           height: "100%",
           playerVars: {
             autoplay: 1,
+            controls: isOwner ? 1 : 0,
+            disablekb: isOwner ? 0 : 1,
           },
         }}
       />
+
+      {!isOwner && <div className="absolute inset-0 z-10" />}
     </div>
   );
 };

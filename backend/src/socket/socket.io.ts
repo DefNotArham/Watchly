@@ -93,9 +93,25 @@ export const initSocket = (server: any) => {
       try {
         await Room.findByIdAndUpdate(roomId, {
           currentTime,
+          isPlaying: true,
         });
 
         socket.to(roomId).emit("video-play", {
+          currentTime,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    socket.on("video-pause", async ({ roomId, currentTime }) => {
+      try {
+        await Room.findByIdAndUpdate(roomId, {
+          currentTime,
+          isPlaying: false,
+        });
+
+        socket.to(roomId).emit("video-pause", {
           currentTime,
         });
       } catch (error) {
