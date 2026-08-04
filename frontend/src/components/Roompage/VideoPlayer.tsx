@@ -1,10 +1,36 @@
+import { useEffect, useRef } from "react";
 import YouTube from "react-youtube";
+import type { YouTubePlayer } from "react-youtube";
+import useRoomStore from "../../stores/room.store";
+import socket from "../../lib/socket.io";
 
 type Props = {
   videoId?: string | null;
 };
 
 const VideoPlayer = ({ videoId }: Props) => {
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+
+  const playerRef = useRef<YouTubePlayer | null>(null);
+
+  const roomId = currentRoom?._id;
+  const clientId = localStorage.getItem("clientId");
+
+  const isOwner = currentRoom?.owner.clientId === clientId;
+
+  useEffect(() => {
+    socket.on("video-play", ({ currentTime }) => {
+      if (playerRef.current) {
+        playerRef.current.seekTo(currentTime, true);
+        playerRef.current.playVideo();
+      }
+    });
+
+    return () => {
+      socket.off("video-play");
+    };
+  }, []);
+
   if (!videoId) {
     return (
       <div className="flex h-full min-h-0 items-center justify-center rounded-xl border border-slate-800 bg-black">
@@ -28,6 +54,19 @@ const VideoPlayer = ({ videoId }: Props) => {
       <YouTube
         key={videoId}
         videoId={videoId}
+        onReady={(event) => {
+          playerRef.current = event.target;
+        }}
+        onStateChange={(event) => {
+          if (!isOwner) return;
+
+          if (event.data === 1) {
+            socket.emit("video-play", {
+              roomId,
+              currentTime: playerRef.current?.getCurrentTime(),
+            });
+          }
+        }}
         className="h-full w-full"
         iframeClassName="h-full w-full"
         opts={{

@@ -28,6 +28,14 @@ const RoomSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    currentTime: {
+      type: Number,
+      default: 0,
+    },
+    isPlaying: {
+      type: Boolean,
+    },
   },
   {
     timestamps: true,
