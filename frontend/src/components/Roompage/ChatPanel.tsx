@@ -1,15 +1,18 @@
 import { useState } from "react";
-
-import messages from "../../data/messages.data";
-
 import useRoomStore from "../../stores/room.store";
 
 import { FaCrown } from "react-icons/fa6";
 
-const ChatPanel = () => {
+type ChatPanelProps = {
+  roomId: string;
+};
+
+const ChatPanel = ({ roomId }: ChatPanelProps) => {
   const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
+  const [message, setMessage] = useState("");
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
+  const sendMessage = useRoomStore((state) => state.sendMessage);
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900">
@@ -40,19 +43,7 @@ const ChatPanel = () => {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-5">
-        {activeTab === "chat" && (
-          <div className="space-y-4">
-            {messages.map((message) => (
-              <div key={message.id}>
-                <span className="font-semibold text-blue-400">
-                  {message.username}
-                </span>
-
-                <p className="text-slate-300">{message.message}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        {activeTab === "chat" && <div className="space-y-4"></div>}
 
         {activeTab === "users" && (
           <div className="space-y-4">
@@ -80,11 +71,22 @@ const ChatPanel = () => {
         <div className="border-t border-slate-800 p-4">
           <div className="flex gap-3">
             <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Message..."
               className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-blue-500"
             />
 
-            <button className="cursor-pointer rounded-lg bg-blue-500 px-5 hover:bg-blue-400">
+            <button
+              onClick={() => {
+                if (!message.trim()) return;
+
+                sendMessage(message, roomId);
+
+                setMessage("");
+              }}
+              className="cursor-pointer rounded-lg bg-blue-500 px-5 hover:bg-blue-400"
+            >
               Send
             </button>
           </div>

@@ -117,7 +117,7 @@ const RoomPage = () => {
               isPlaying={currentRoom?.isPlaying}
             />
 
-            <ChatPanel />
+            <ChatPanel roomId={roomId} />
           </div>
         </main>
       </div>
