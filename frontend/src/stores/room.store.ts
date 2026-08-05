@@ -33,6 +33,7 @@ type RoomStoreType = {
   updateParticipants: (users: UserType[]) => void;
   updateVideoId: (videoId: string) => void;
   updateVideoState: (currentTime: number, isPlaying: boolean) => void;
+  addMessage: (message: MessageType) => void;
 
   // Loading
   createRoomLoading: boolean;
@@ -84,6 +85,12 @@ const useRoomStore = create<RoomStoreType>((set) => ({
             videoId,
           }
         : null,
+    }));
+  },
+
+  addMessage(message: MessageType) {
+    set((state) => ({
+      messages: [...state.messages, message],
     }));
   },
 
