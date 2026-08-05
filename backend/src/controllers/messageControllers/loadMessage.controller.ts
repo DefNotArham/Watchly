@@ -4,14 +4,23 @@ import Message from "../../models/Message.model.js";
 
 const loadMessages = async (req: Request, res: Response) => {
   const { roomId } = req.params;
+
   try {
+    if (!roomId) {
+      return res.status(400).json({
+        message: "Room ID is required",
+      });
+    }
+
     const room = await Room.findOne({ _id: roomId });
 
     if (!room) {
-      return res.status(404).json({ message: "Room not found" });
+      return res.status(404).json({
+        message: "Room not found",
+      });
     }
 
-    const messages = Message.find({ roomId }).populate("sender");
+    const messages = await Message.find({ roomId }).populate("sender");
 
     return res.status(200).json({
       success: true,

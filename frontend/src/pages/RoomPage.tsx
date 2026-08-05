@@ -19,6 +19,7 @@ const RoomPage = () => {
   const loadRoom = useRoomStore((state) => state.loadRoom);
   const loadRoomLoading = useRoomStore((state) => state.loadRoomLoading);
   const currentRoom = useRoomStore((state) => state.currentRoom);
+  const loadMessages = useRoomStore((state) => state.loadMessages);
 
   const updateParticipants = useRoomStore((state) => state.updateParticipants);
 
@@ -51,6 +52,11 @@ const RoomPage = () => {
 
     initRoom();
   }, [roomId, loadRoom, navigate]);
+
+  useEffect(() => {
+    if (!roomId) return;
+    loadMessages(roomId);
+  }, [roomId, loadMessages]);
 
   // Sockets
   useEffect(() => {

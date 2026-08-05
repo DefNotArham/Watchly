@@ -42,7 +42,7 @@ const sendMessage = async (
     const message = await Message.create({
       content,
       sender: user?._id,
-      room: room?._id,
+      roomId: room?._id,
     });
 
     await message.populate("sender");
