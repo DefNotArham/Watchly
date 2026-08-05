@@ -1,16 +1,22 @@
 const Footer = () => {
   return (
     <footer className="border-t border-slate-800 bg-slate-950 px-6 py-5 md:px-12">
-      <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-        <div className="flex items-center gap-2">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <div>
           <h2 className="font-title text-2xl text-slate-200">Watchly</h2>
+          <p className="text-sm text-slate-500">
+            A real-time YouTube watch party project.
+          </p>
         </div>
 
-        <div className="flex gap-6 text-sm text-slate-500">
-          <span className="hover:text-slate-300 cursor-pointer">About</span>
-          <span className="hover:text-slate-300 cursor-pointer">GitHub</span>
-          <span className="hover:text-slate-300 cursor-pointer">Contact</span>
-        </div>
+        <a
+          href="https://github.com/DefNotArham"
+          target="_blank"
+          rel="noreferrer"
+          className="cursor-pointer text-sm text-slate-500 hover:text-slate-300"
+        >
+          GitHub
+        </a>
 
         <p className="text-sm text-slate-600">© 2026 Watchly</p>
       </div>
