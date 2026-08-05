@@ -48,6 +48,7 @@ type RoomStoreType = {
   loadRoom: (roomId: string) => Promise<RoomType | null>;
   joinRoom: (joinCode: string, username: string) => Promise<RoomType | null>;
   sendMessage: (content: string, roomId: string) => Promise<void>;
+  loadMessages: (roomId: string) => Promise<void>;
 };
 
 const useRoomStore = create<RoomStoreType>((set) => ({
@@ -225,6 +226,17 @@ const useRoomStore = create<RoomStoreType>((set) => ({
 
       set((state) => ({
         messages: [...state.messages, response.data.newMessage],
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  loadMessages: async (roomId: string) => {
+    try {
+      const response = await api.get(`/message/load-messages/${roomId}`);
+      set(() => ({
+        messages: response.data.messages,
       }));
     } catch (error) {
       console.log(error);
