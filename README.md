@@ -86,6 +86,10 @@ npm run dev
 
 Watchly was built as a learning project to explore real-time applications, WebSockets, database relationships, and full-stack development.
 
+## Acknowledgments
+
+I used AI tools like ChatGPT and Claude to help with the frontend development, including UI design ideas, component structure, and styling. The backend, real-time functionality, database setup, and overall project integration were built by me.
+
 ## Author
 
 Arham Kabir
