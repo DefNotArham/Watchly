@@ -218,15 +218,15 @@ const useRoomStore = create<RoomStoreType>((set) => ({
         return;
       }
 
-      const response = await api.post("/message/send-message", {
+      await api.post("/message/send-message", {
         content,
         roomId,
         clientId,
       });
 
-      set((state) => ({
-        messages: [...state.messages, response.data.newMessage],
-      }));
+      // set((state) => ({
+      //   messages: [...state.messages, response.data.newMessage],
+      // }));
     } catch (error) {
       console.log(error);
     }

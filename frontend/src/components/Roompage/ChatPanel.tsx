@@ -2,6 +2,7 @@ import { useState } from "react";
 import useRoomStore from "../../stores/room.store";
 
 import { FaCrown } from "react-icons/fa6";
+import socket from "../../lib/socket.io";
 
 type ChatPanelProps = {
   roomId: string;
@@ -95,6 +96,8 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
                 if (!message.trim()) return;
 
                 sendMessage(message, roomId);
+
+                socket.emit("send-message", { roomId, content: message });
 
                 setMessage("");
               }}

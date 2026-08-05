@@ -4,6 +4,8 @@ import User from "../../models/User.model.js";
 
 import type { Request, Response } from "express";
 
+import { getIO } from "../../socket/socket.io.js";
+
 type messageType = {
   content: string;
   clientId: string;
@@ -44,6 +46,10 @@ const sendMessage = async (
       sender: user?._id,
       roomId: room?._id,
     });
+
+    await message.populate("sender");
+
+    getIO().to(roomId).emit("new-message", message);
 
     await message.populate("sender");
 
