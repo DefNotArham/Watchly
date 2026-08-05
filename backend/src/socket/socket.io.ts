@@ -124,20 +124,6 @@ export const initSocket = (server: any) => {
 
     socket.on("video-seek", async ({ roomId, currentTime }) => {
       try {
-        await Room.findByIdAndUpdate(roomId, {
-          currentTime,
-        });
-
-        socket.to(roomId).emit("video-seek", {
-          currentTime,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    });
-
-    socket.on("disconnect", async () => {
-      try {
         const { clientId, roomId } = socket.data;
 
         if (!clientId || !roomId) {
@@ -150,11 +136,27 @@ export const initSocket = (server: any) => {
           return;
         }
 
-        await Room.findByIdAndUpdate(roomId, {
-          $pull: {
-            users: user._id,
+        const room = await Room.findByIdAndUpdate(
+          roomId,
+          {
+            $pull: {
+              users: user._id,
+            },
           },
-        });
+          { new: true },
+        );
+
+        if (!room) {
+          return;
+        }
+
+        // Delete room if nobody is left
+        if (room.users.length === 0) {
+          await Room.findByIdAndDelete(roomId);
+
+          console.log(`Deleted empty room ${roomId}`);
+          return;
+        }
 
         const updatedRoom = await Room.findById(roomId)
           .populate("users")
