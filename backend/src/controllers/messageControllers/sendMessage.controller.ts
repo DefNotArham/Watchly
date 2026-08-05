@@ -36,6 +36,8 @@ const sendMessage = async (req: Request, res: Response) => {
       room: room?._id,
     });
 
+    await message.populate("sender");
+
     return res.status(200).json({ success: true, newMessage: message });
   } catch (error) {
     console.log(error);

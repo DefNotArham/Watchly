@@ -13,6 +13,7 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
 
   const currentRoom = useRoomStore((state) => state.currentRoom);
   const sendMessage = useRoomStore((state) => state.sendMessage);
+  const messages = useRoomStore((state) => state.messages);
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900">
@@ -43,7 +44,19 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-5">
-        {activeTab === "chat" && <div className="space-y-4"></div>}
+        {activeTab === "chat" && (
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <div key={message._id}>
+                <span className="font-semibold text-blue-400">
+                  {message.sender.username}
+                </span>
+
+                <p className="text-slate-300">{message.content}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {activeTab === "users" && (
           <div className="space-y-4">
