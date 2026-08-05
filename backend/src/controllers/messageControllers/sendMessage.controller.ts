@@ -4,7 +4,16 @@ import User from "../../models/User.model.js";
 
 import type { Request, Response } from "express";
 
-const sendMessage = async (req: Request, res: Response) => {
+type messageType = {
+  content: string;
+  clientId: string;
+  roomId: string;
+};
+
+const sendMessage = async (
+  req: Request<{}, {}, messageType>,
+  res: Response,
+) => {
   const { content, clientId, roomId } = req.body;
   try {
     if (!clientId)
