@@ -1,5 +1,3 @@
-import React from "react";
-
 import Fonts from "../styles/Fonts";
 
 import Navbar from "../components/Homepage/Navbar";
