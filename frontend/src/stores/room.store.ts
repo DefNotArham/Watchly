@@ -19,8 +19,17 @@ type RoomType = {
   isPlaying: boolean;
 };
 
+type MessageType = {
+  _id: string;
+  content: string;
+  sender: UserType;
+  roomId: string;
+};
+
 type RoomStoreType = {
   currentRoom: RoomType | null;
+  messages: MessageType[];
+
   updateParticipants: (users: UserType[]) => void;
   updateVideoId: (videoId: string) => void;
   updateVideoState: (currentTime: number, isPlaying: boolean) => void;
@@ -42,6 +51,7 @@ type RoomStoreType = {
 
 const useRoomStore = create<RoomStoreType>((set) => ({
   currentRoom: null,
+  messages: [],
 
   updateParticipants(users: UserType[]) {
     set((state) => ({
@@ -200,11 +210,15 @@ const useRoomStore = create<RoomStoreType>((set) => ({
         return;
       }
 
-      await api.post("/message/send-message", {
+      const response = await api.post("/message/send-message", {
         content,
         roomId,
         clientId,
       });
+
+      set((state) => ({
+        messages: [...state.messages, response.data.newMessage],
+      }));
     } catch (error) {
       console.log(error);
     }
