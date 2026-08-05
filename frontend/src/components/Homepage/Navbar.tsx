@@ -5,10 +5,6 @@ const Navbar = () => (
 
       <span className="font-title text-2xl text-slate-100">Watchly</span>
     </div>
-
-    <button className="rounded-full bg-blue-500 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-400">
-      Create Room
-    </button>
   </header>
 );
 
