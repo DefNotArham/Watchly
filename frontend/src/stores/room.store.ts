@@ -37,6 +37,7 @@ type RoomStoreType = {
   createRoom: (username: string) => Promise<RoomType | null>;
   loadRoom: (roomId: string) => Promise<RoomType | null>;
   joinRoom: (joinCode: string, username: string) => Promise<RoomType | null>;
+  sendMessage: (content: string, roomId: string) => Promise<void>;
 };
 
 const useRoomStore = create<RoomStoreType>((set) => ({
@@ -188,6 +189,25 @@ const useRoomStore = create<RoomStoreType>((set) => ({
     setTimeout(() => {
       set({ joinRoomError: null });
     }, 3000);
+  },
+
+  sendMessage: async (content: string, roomId: string) => {
+    try {
+      const clientId = localStorage.getItem("clientId");
+
+      if (!clientId) {
+        console.log("No clientId found");
+        return;
+      }
+
+      await api.post("/message/send-message", {
+        content,
+        roomId,
+        clientId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   },
 }));
 
