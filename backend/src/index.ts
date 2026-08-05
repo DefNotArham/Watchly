@@ -8,6 +8,7 @@ import connectDb from "./db/connectDB.js";
 
 import userRoutes from "./routes/user.routes.js";
 import roomRoutes from "./routes/room.routes.js";
+import messageRoutes from "./routes/message.routes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(
 
 app.use("/user", userRoutes);
 app.use("/room", roomRoutes);
+app.use("/message", messageRoutes);
 
 initSocket(httpServer);
 
