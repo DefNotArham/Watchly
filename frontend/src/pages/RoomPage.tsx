@@ -127,7 +127,7 @@ const RoomPage = () => {
         />
 
         <main className="flex flex-1 overflow-hidden p-6">
-          <div className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_350px]">
+          <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_350px]">
             <VideoPlayer
               videoId={videoId}
               currentTime={currentRoom?.currentTime}
