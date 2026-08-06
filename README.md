@@ -1,14 +1,14 @@
-# Watchly 🎥
+# Watchly
 
 A real-time YouTube watch party application that allows users to create rooms, watch videos together, and communicate in real time.
 
 ## Features
 
-- 🎬 Create and join watch rooms
-- ▶️ Real-time YouTube video synchronization
-- 💬 Real-time chat
-- 👥 Multiple users per room
-- 🔄 Live room updates using Socket.IO
+- Create and join watch rooms
+- Real-time YouTube video synchronization
+- Real-time chat
+- Multiple users per room
+- Live room updates using Socket.IO
 
 ## Tech Stack
 
@@ -93,4 +93,3 @@ I used AI tools like ChatGPT and Claude to help with the frontend development, i
 ## Author
 
 Arham Kabir
-GitHub: https://github.com/DefNotArham
