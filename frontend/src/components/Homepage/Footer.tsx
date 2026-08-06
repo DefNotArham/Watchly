@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="border-t border-slate-800 bg-slate-950 px-6 py-5 md:px-12">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
         <div>
           <h2 className="font-title text-2xl text-slate-200">Watchly</h2>
           <p className="text-sm text-slate-500">
