@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useRoomStore from "../../stores/room.store";
 
 import { FaCrown } from "react-icons/fa6";
@@ -15,6 +15,26 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
   const currentRoom = useRoomStore((state) => state.currentRoom);
   const sendMessage = useRoomStore((state) => state.sendMessage);
   const messages = useRoomStore((state) => state.messages);
+
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Only auto-scroll to the newest message when the user is already at (or
+  // near) the bottom -- otherwise an incoming message would yank them away
+  // from chat history they scrolled up to read.
+  const [autoScroll, setAutoScroll] = useState(true);
+
+  useEffect(() => {
+    if (activeTab === "chat" && autoScroll) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, activeTab, autoScroll]);
+
+  const handleMessagesScroll = () => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setAutoScroll(distanceFromBottom < 80);
+  };
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900">
@@ -44,7 +64,11 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-5">
+      <div
+        ref={messagesContainerRef}
+        onScroll={handleMessagesScroll}
+        className="flex-1 overflow-y-auto p-5"
+      >
         {activeTab === "chat" && (
           <div className="space-y-4">
             {messages.map((message) => (
@@ -56,6 +80,7 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
                 <p className="text-slate-300">{message.content}</p>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
         )}
 
