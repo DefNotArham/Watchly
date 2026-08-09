@@ -8,6 +8,10 @@ type ChatPanelProps = {
   roomId: string;
 };
 
+// Kept in sync with the backend's own limit (see sendMessage.controller.ts
+// and Message.model.ts) — this is only the client-side UX half of it.
+const MAX_MESSAGE_LENGTH = 500;
+
 const ChatPanel = ({ roomId }: ChatPanelProps) => {
   const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
   const [message, setMessage] = useState("");
@@ -111,14 +115,18 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
           <div className="flex gap-3">
             <input
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) =>
+                setMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH))
+              }
+              maxLength={MAX_MESSAGE_LENGTH}
               placeholder="Message..."
               className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-blue-500"
             />
 
             <button
               onClick={() => {
-                if (!message.trim()) return;
+                if (!message.trim() || message.length > MAX_MESSAGE_LENGTH)
+                  return;
 
                 sendMessage(message, roomId);
 
@@ -130,6 +138,16 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
             >
               Send
             </button>
+          </div>
+
+          <div
+            className={`mt-1 text-right text-xs ${
+              message.length >= MAX_MESSAGE_LENGTH
+                ? "text-red-400"
+                : "text-slate-500"
+            }`}
+          >
+            {message.length}/{MAX_MESSAGE_LENGTH}
           </div>
         </div>
       )}
