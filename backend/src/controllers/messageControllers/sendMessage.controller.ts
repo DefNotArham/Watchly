@@ -12,6 +12,12 @@ type messageType = {
   roomId: string;
 };
 
+// Mirrored on the Message model (maxlength) and in the frontend's ChatPanel
+// input — checked explicitly here too, rather than relying only on the
+// Mongoose validator, so a request over the limit gets a clear 400 instead
+// of a generic ValidationError falling into the catch-all 500 below.
+const MAX_MESSAGE_LENGTH = 500;
+
 const sendMessage = async (
   req: Request<{}, {}, messageType>,
   res: Response,
@@ -27,6 +33,12 @@ const sendMessage = async (
       return res
         .status(400)
         .json({ success: false, message: "Content not found" });
+
+    if (content.length > MAX_MESSAGE_LENGTH)
+      return res.status(400).json({
+        success: false,
+        message: `Content must be ${MAX_MESSAGE_LENGTH} characters or fewer`,
+      });
 
     const user = await User.findOne({ clientId });
 
