@@ -24,6 +24,9 @@ type MessageType = {
   content: string;
   sender: UserType;
   roomId: string;
+  // Set by Mongoose `timestamps` on the Message model, so both the
+  // load-messages response and the socket payload already carry it.
+  createdAt: string;
 };
 
 type RoomStoreType = {

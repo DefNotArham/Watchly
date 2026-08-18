@@ -12,6 +12,27 @@ type ChatPanelProps = {
 // and Message.model.ts) — this is only the client-side UX half of it.
 const MAX_MESSAGE_LENGTH = 500;
 
+// Messages arrive from two places -- the load-messages response and the
+// socket -- and both serialise createdAt as an ISO string. Anything else is
+// treated as absent rather than rendered as "Invalid Date".
+const parseMessageDate = (createdAt: string | undefined) => {
+  if (!createdAt) return null;
+  const date = new Date(createdAt);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+// Beside the username, where space is tight: hours and minutes only.
+const formatMessageTime = (createdAt: string | undefined) =>
+  parseMessageDate(createdAt)?.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  }) ?? "";
+
+// On hover, the full local date and time -- a room can outlive a day, and
+// "09:14" alone does not say which one.
+const formatMessageTimestamp = (createdAt: string | undefined) =>
+  parseMessageDate(createdAt)?.toLocaleString() ?? "";
+
 const ChatPanel = ({ roomId }: ChatPanelProps) => {
   const [activeTab, setActiveTab] = useState<"chat" | "users">("chat");
   const [message, setMessage] = useState("");
@@ -77,9 +98,21 @@ const ChatPanel = ({ roomId }: ChatPanelProps) => {
           <div className="space-y-4">
             {messages.map((message) => (
               <div key={message._id}>
-                <span className="font-semibold text-blue-400">
-                  {message.sender.username}
-                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-semibold text-blue-400">
+                    {message.sender.username}
+                  </span>
+
+                  {formatMessageTime(message.createdAt) && (
+                    <time
+                      dateTime={message.createdAt}
+                      title={formatMessageTimestamp(message.createdAt)}
+                      className="shrink-0 text-xs text-slate-500"
+                    >
+                      {formatMessageTime(message.createdAt)}
+                    </time>
+                  )}
+                </div>
 
                 <p className="text-slate-300">{message.content}</p>
               </div>
